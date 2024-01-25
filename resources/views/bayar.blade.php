@@ -10,6 +10,11 @@
 <body>
     @include('template.nav')
     <div class="container mt-5">
+        @if (session('notif'))
+            <div class="alert alert-danger">
+                {{ session('notif') }}
+            </div>
+        @endif
         <form action="{{ route('prosesbayar.buku', $detailtransaksi->id) }}" method="POST" enctype="multipart/form-data">
             @csrf
             <div class="row">
@@ -30,7 +35,7 @@
                             <hr>
                             <div class="mb-2">
                                 <label for="input_pembayaran" class="form-label">Input Pembayaran</label>
-                                <input type="text" class="form-control" id="input_pembayaran" name="input_pembayaran" required>
+                                <input type="text" class="form-control" id="input_pembayaran" name="input_pembayaran"  required>
                             </div>                            
                             <hr>
                             <h5> Keterangan :</h5>

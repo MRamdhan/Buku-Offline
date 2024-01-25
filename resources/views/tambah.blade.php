@@ -14,16 +14,17 @@
     }
 </style>
 <body>
+    @include('template.nav')
     <div class="container mt-5">
         <div class="card p-4">
-                <h3>Tambah Orderan</h3>
+                <h3>Tambah Buku</h3>
                 <form action="{{route('tambahbuku')}}" method="post" enctype="multipart/form-data" class="form-group">
                     @csrf
                     <label for="">Judul Buku</label>
                     <input type="text" class="form-control" name="judul" required>
                     <label for="">Harga Buku</label>
                     <input type="text" class="form-control" name="harga" required>
-                    <label for="">Tanggal Pembelian</label>
+                    <label for="">Tanggal Pembuatan</label>
                     <input type="text" class="form-control" name="tanggal_pembelian" required>
                     <label for="">Foto</label>
                     <input type="file" class="form-control" name="foto" required accept="img/*">

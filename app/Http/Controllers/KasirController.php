@@ -12,6 +12,8 @@ use Barryvdh\DomPDF\PDF as DomPDFPDF;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Validator;
+use Illuminate\Validation\Rule;
 
 class KasirController extends Controller
 {
@@ -30,7 +32,8 @@ class KasirController extends Controller
             'password' => 'required',
         ]);
         if (Auth::attempt($data)) {
-            return redirect()->route('home')->with('notif', 'selamat datang');
+            $name = auth()->user();
+            return redirect()->route('home')->with('notif', 'selamat datang :' . $name->name);
         }
         return redirect()->route('login')->with('notif', 'email atau password salah');
     }
@@ -73,12 +76,11 @@ class KasirController extends Controller
     {
         $request->validate([
             'id_pelanggan' => 'required',
-            'banyak' => 'required|array',  // Make sure 'banyak' is an array
-            'selected_buku' => 'required|array',  // Make sure 'selected_buku' is an array
+            'banyak' => 'required|array',
+            'selected_buku' => 'required|array',
         ]);
 
         $idPelanggan = $request->id_pelanggan;
-        // $inputPembayaran = $request->input_pembayaran;
         $selectedBuku = $request->selected_buku;
 
         foreach ($selectedBuku as $bukuId) {
@@ -91,7 +93,6 @@ class KasirController extends Controller
                 'status' => 'keranjang',
                 'totalharga' => $buku->harga * $request->banyak[$bukuId],
                 'id_pelanggan' => $idPelanggan,
-                // 'input_pembayaran' => $inputPembayaran
             ]);
         }
 
@@ -104,18 +105,20 @@ class KasirController extends Controller
         $buku = $detailtransaksi->buku;
         return view('bayar', compact('buku', 'detailtransaksi'));
     }
+
     function prosesbayar(Request $request, DetailTransaksi $detailtransaksi, Transaksi $transaksi)
     {
-        $request->validate([
-            'input_pembayaran' => 'required'
+        $validator = Validator::make($request->all(), [
+            'input_pembayaran' => 'required|numeric|min:' . $detailtransaksi->totalharga
         ]);
-        
-        // dd($request->all(), $detailtransaksi->toArray(), $transaksi->toArray());
 
+        if($validator->fails()){
+            return redirect()->route('bayar.buku', ['detailtransaksi' => $detailtransaksi->id])->with('notif', 'Nomnal kurang');
+        }
+        
         $transaksi = Transaksi::create([
             'user_id' => auth()->id(),
             'total_harga' => $detailtransaksi->totalharga,
-            // 'input_pembayaran' => $transaksi->input_pembayaran,
             'code' => 'INV' . Str::random(8)
         ]);
 
@@ -142,15 +145,16 @@ class KasirController extends Controller
     }
 
 
-    public function viewPDF(DetailTransaksi $detailtransaksi)
+    public function invoice(DetailTransaksi $detailtransaksi)
     {
-        $detailtransaksi = DetailTransaksi::all();
+        $detailtransaksi = [
+            'detailtransaksi' => $detailtransaksi
+        ];
 
         $pdf = FacadePdf::loadView('templatepdf', array('detailtransaksi' =>  $detailtransaksi))
-        ->setPaper('a4', 'portrait');
+            ->setPaper('a4', 'portrait');
 
-        return $pdf->stream();
-
+        return $pdf->download('detailtransaksi.pdf');
     }
 
     public function downloadPDF(DetailTransaksi $detailtransaksi)
@@ -158,8 +162,8 @@ class KasirController extends Controller
         $detailtransaksi = DetailTransaksi::all();
 
         $pdf = FacadePdf::loadView('templatepdf', array('detailtransaksi' =>  $detailtransaksi))
-        ->setPaper('a4', 'portrait');
+            ->setPaper('a4', 'portrait');
 
-        return $pdf->download('detailtransaksi.pdf');   
+        return $pdf->download('detailtransaksi.pdf');
     }
 }

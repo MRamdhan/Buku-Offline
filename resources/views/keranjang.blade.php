@@ -26,15 +26,15 @@
                         <p class="card-title">Jumlah Buku</p>
                         <input type="number" name="id_pelanggan" id="" class="form-control" value="{{ $item->qty }}" required readonly> 
                         <hr>
-                        <p class="card-text">Harga Rp.{{ number_format($item->buku->harga,3,',','.')}}</p>
-                        <input type="number" name="banyak" id="" class="form-control" value="{{ $item->qty }}" required readonly>
+                        <p class="card-title">Harga Buku</p>
+                        <input type="number" name="banyak" id="" class="form-control" value="{{$item->buku->harga,3,',','.' }}" required readonly>
                         <hr>
                         <p class="card-text">Total Rp.{{ number_format($item->totalharga,3,',','.')}}</p>
                     </div>
                 </div>
 
                 <div class="col-2 p-5">
-                    <a href="{{ route('bayar.buku',$item->id) }}" class="btn btn-info"> Bayar </a>
+                    <a href="{{ route('bayar.buku',$item->id) }}" class="btn btn-primary"> Bayar </a>
                 </div>
             </div>
         </div>

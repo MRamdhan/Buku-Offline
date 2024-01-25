@@ -20,8 +20,8 @@ Route::post('postlogin', [KasirController::class, 'postlogin'])->name('postlogin
 Route::get('/home', [KasirController::class, 'home'])->name('home');
 
 Route::middleware('auth')->group(function(){
-    Route::post('detailtransaksi/view-pdf', [KasirController::class, 'viewPDF'])->name('view-pdf');
     Route::post('detailtransaksi/download-pdf', [KasirController::class, 'downloadPDF'])->name('download-pdf');
+    Route::get('invoice/{detailtransaksi}', [KasirController::class, 'invoice'])->name('invoice');
     Route::get('logout', [KasirController::class, 'logout'])->name('logout');
     Route::post('/postkeranjang/{buku}', [KasirController::class, 'postkeranjang'])->name('postkeranjang.buku');
     Route::get('/keranjang', [KasirController::class, 'keranjang'])->name('keranjang.buku');

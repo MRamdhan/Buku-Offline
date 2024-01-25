@@ -6,6 +6,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <link rel="stylesheet" href="css/bootstrap.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;500&display=swap" rel="stylesheet">
     <title>Welcome</title>
 </head>
 
@@ -20,7 +23,7 @@
         <div class="hero py-5 bg-light p-3">
             <div class="container">
                 <h1> Buku Offline </h1>
-                <a href="/tambah" class="btn btn-primary">
+                <a href="/tambah" class="btn btn-primary mt-2">
                     Tambah Buku
                 </a>
             </div>
@@ -44,7 +47,7 @@
                             <div class="card-body" style="display: flex; align-items: center;">
                                 <img src="{{ $item->foto }}" alt="" style="width: 100px; margin-right: 20px;">
                                 <div style="flex: 1;">
-                                    <h5 class="mb-1">{{ $item->judul }}</h5>
+                                    <h3 class="mb-1">{{ $item->judul }}</h4>
                                     <small class="text-muted">Harga Barag : Rp. {{ $item->harga }}</small>
                                     <hr>
                                     <label label for="buku_{{ $item->id }}">Jumlah Barang :</label>
